@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "616831820760",
+    "project_id": "ngabsenin1",
+    "storage_bucket": "ngabsenin1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616831820760:android:7cc4955483d067ef4488ad",
+        "android_client_info": {
+          "package_name": "com.example.proj1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbV9XUZxZT5rCjpvmDMft27PoJMCArDys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
