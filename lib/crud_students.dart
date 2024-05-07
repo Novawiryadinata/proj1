@@ -4,6 +4,7 @@ import 'package:proj1/profil_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 class CrudStudents extends StatefulWidget {
   @override
@@ -12,9 +13,15 @@ class CrudStudents extends StatefulWidget {
 
 class _CrudStudentsState extends State<CrudStudents> {
   String? studentKelas;
-  String selectedValue = 'A';
+  // String selectedValue = 'A';
   String? studentNama;
   String? studentNim;
+  String selectedKelas = 'A'; // Nilai default untuk DropdownButtonFormField
+  String defaultKelas = 'A'; // Nilai default yang disimpan
+
+  TextEditingController kelasController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController nimController = TextEditingController();
 
   @override
   void initState() {
@@ -52,6 +59,23 @@ class _CrudStudentsState extends State<CrudStudents> {
       print(
           "-->>>> Failed to create $studentNim, $studentNama, $studentKelas: $error");
     });
+
+    setState(() {
+      selectedKelas = defaultKelas;
+      kelasController.text = defaultKelas;
+    });
+
+    // kelasController.clear();
+    namaController.clear();
+    nimController.clear();
+  }
+
+  void resetKelas() {
+    setState(() {
+      selectedKelas = defaultKelas;
+      kelasController.text =
+          defaultKelas; // Mengatur kembali nilai dalam kelasController
+    });
   }
 
   @override
@@ -65,6 +89,7 @@ class _CrudStudentsState extends State<CrudStudents> {
           Padding(
             padding: EdgeInsets.all(16.0),
             child: TextFormField(
+              controller: namaController,
               decoration: InputDecoration(
                   labelText: "Name",
                   fillColor: Colors.white,
@@ -78,6 +103,13 @@ class _CrudStudentsState extends State<CrudStudents> {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: TextFormField(
+              controller: nimController,
+              keyboardType:
+                  TextInputType.number, // Mengatur keyboard untuk tipe angka
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter
+                    .digitsOnly // Memastikan input hanya menerima angka
+              ],
               decoration: InputDecoration(
                   labelText: "NIM",
                   fillColor: Colors.white,
@@ -98,10 +130,12 @@ class _CrudStudentsState extends State<CrudStudents> {
                   borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
               ),
-              value: studentKelas,
+              // controller: kelasController,
+              value:
+                  selectedKelas, // Nilai default untuk DropdownButtonFormField
               onChanged: (String? newValue) {
                 setState(() {
-                  studentKelas = newValue!;
+                  selectedKelas = newValue!;
                 });
               },
               items: <String>['A', 'B', 'C', 'D']
@@ -129,6 +163,7 @@ class _CrudStudentsState extends State<CrudStudents> {
                 onPressed: () {
                   // Aksi yang akan dilakukan ketika tombol ditekan
                   createData();
+                  resetKelas();
                   // print('Tombol ditekan!');
                 },
                 child: Text("Create"), // Isi dari tombol
