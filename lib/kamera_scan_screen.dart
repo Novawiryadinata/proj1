@@ -204,6 +204,7 @@ class _QRViewExampleState extends State<KameraScanScreen> {
       ],
     );
   }
+  // tesrt
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
