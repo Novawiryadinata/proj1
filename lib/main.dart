@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:proj1/absensi_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_core/firebase_core.dart';s
-
-// import 'absensi_screen.dart';
-// import 'kamera_scan_screen.dart';
-// import 'profil_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:proj1/login.dart';
+import 'package:proj1/absensi_screen.dart';
+import 'package:proj1/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Ensure that Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+
+  MyApp({required this.isLoggedIn});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ngabsenin',
-      debugShowCheckedModeBanner:
-          false, // Tambahkan debugShowCheckedModeBanner: false
-      theme: ThemeData(
-          // Tambahkan konfigurasi theme
-          brightness: Brightness.light,
-          primaryColor: Colors.blue,
-          secondaryHeaderColor: Colors.cyan),
-      // theme: ThemeData(
-      //   primarySwatch: Colors.blue,
-      //   visualDensity: VisualDensity.adaptivePlatformDensity,
-      // ),
-      home: AbsensiScreen(), // Mulai dengan AbsensiScreen
+    return ChangeNotifierProvider(
+      create: (ctx) => Auth(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: isLoggedIn ? AbsensiScreen() : LoginScreen(),
+      ),
     );
   }
 }

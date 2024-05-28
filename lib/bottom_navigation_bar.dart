@@ -19,6 +19,10 @@ class BottomNavigationBarWidget extends StatelessWidget {
           label: 'Absensi',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.manage_accounts),
+          label: 'Manajemen Data',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.camera_alt),
           label: 'Kamera',
         ),
@@ -29,6 +33,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
       ],
       currentIndex: currentIndex,
       selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
       onTap: onTap,
     );
   }

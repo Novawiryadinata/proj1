@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'bottom_navigation_bar.dart';
 import 'package:proj1/bottom_navigation_bar.dart';
 import 'package:proj1/profil_screen.dart';
+import 'package:proj1/crud_students.dart';
+import 'package:proj1/absensi_screen.dart';
 
 import 'dart:developer';
 import 'dart:io';
@@ -36,7 +38,19 @@ class _QRViewExampleState extends State<KameraScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR SCAN'),
+        title: Text('Scan Camera QR Code'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigasi ke halaman utama atau login
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AbsensiScreen()), // Ganti dengan halaman utama jika diperlukan
+              (Route<dynamic> route) => false,
+            );
+          },
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -49,86 +63,6 @@ class _QRViewExampleState extends State<KameraScanScreen> {
               ],
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  // else const Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.toggleFlash();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getFlashStatus(),
-                            builder: (context, snapshot) {
-                              return Text('Flash: ${snapshot.data}');
-                            },
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.flipCamera();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getCameraInfo(),
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null) {
-                                return Text(
-                                  'Camera facing ${describeEnum(snapshot.data!)}',
-                                );
-                              } else {
-                                return const Text('loading');
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
         ],
       ),
       floatingActionButton: Row(
@@ -167,11 +101,19 @@ class _QRViewExampleState extends State<KameraScanScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
-        currentIndex: 1,
+        currentIndex: 2,
         onTap: (index) {
           if (index == 0) {
-            Navigator.pop(context);
-          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AbsensiScreen()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CrudStudents()),
+            );
+          } else if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfilScreen()),
