@@ -272,7 +272,6 @@ class _LoginScreenState extends State<LoginScreen> {
               fit: BoxFit.contain,
             ),
             SizedBox(height: 20),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -321,16 +320,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-
-            // TextField(
-            //   controller: _emailController,
-            //   decoration: InputDecoration(labelText: 'Email'),
-            // ),
-            // TextField(
-            //   controller: _passwordController,
-            //   decoration: InputDecoration(labelText: 'Password'),
-            //   obscureText: true,
-            // ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _login,
