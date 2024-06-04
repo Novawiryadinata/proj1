@@ -1,4 +1,4 @@
-import 'package:proj1/signup.dart';
+// import 'package:proj1/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj1/bottom_navigation_bar.dart';

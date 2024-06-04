@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import '/signup.dart';
-import '/login.dart';
+// import 'package:flutter/rendering.dart';
+// import '/signup.dart';
+// import '/login.dart';
 
 import 'package:http/http.dart' as http;
 
