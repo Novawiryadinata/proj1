@@ -186,11 +186,44 @@ class _QRViewExampleState extends State<KameraScanScreen> {
 //     );
 //   }
 
-// code baru lagi
+// // code baru lagi
+//   Widget _buildScanResultDialog(BuildContext context) {
+//     if (studentNama == null || studentKelas == null || studentNim == null) {
+//       return Center(child: CircularProgressIndicator());
+//     }
+//     return AlertDialog(
+//       title: Text('Scan Result'),
+//       content: SingleChildScrollView(
+//         child: ListBody(
+//           children: <Widget>[
+//             Text('Nama: $studentNama'),
+//             Text('Kelas: $studentKelas'),
+//             Text('NIM: $studentNim'),
+//           ],
+//         ),
+//       ),
+//       actions: <Widget>[
+//         TextButton(
+//           onPressed: () {
+//             Navigator.of(context).pop();
+//           },
+//           child: Text('Cancel'),
+//         ),
+//         TextButton(
+//           onPressed: () async {
+//             await _markAttendance();
+//           },
+//           child: Text('Hadir'),
+//         ),
+//       ],
+//     );
+//   }
+
   Widget _buildScanResultDialog(BuildContext context) {
     if (studentNama == null || studentKelas == null || studentNim == null) {
       return Center(child: CircularProgressIndicator());
     }
+
     return AlertDialog(
       title: Text('Scan Result'),
       content: SingleChildScrollView(
@@ -209,12 +242,14 @@ class _QRViewExampleState extends State<KameraScanScreen> {
           },
           child: Text('Cancel'),
         ),
-        TextButton(
-          onPressed: () async {
-            await _markAttendance();
-          },
-          child: Text('Hadir'),
-        ),
+        if (studentNama !=
+            'Data tidak ditemukan') // Tampilkan tombol "Hadir" hanya jika data ditemukan
+          TextButton(
+            onPressed: () async {
+              await _markAttendance();
+            },
+            child: Text('Hadir'),
+          ),
       ],
     );
   }
