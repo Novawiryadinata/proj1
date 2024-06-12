@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-// import 'bottom_navigation_bar.dart';
 import 'package:proj1/bottom_navigation_bar.dart';
 import 'package:proj1/profil_screen.dart';
 import 'package:proj1/crud_students.dart';
 import 'package:proj1/absensi_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:intl/intl.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -25,14 +20,10 @@ class _QRViewExampleState extends State<KameraScanScreen> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
-  // tambahan
   String? studentNama;
   String? studentKelas;
   String? studentNim;
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
@@ -50,11 +41,8 @@ class _QRViewExampleState extends State<KameraScanScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigasi ke halaman utama atau login
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AbsensiScreen()), // Ganti dengan halaman utama jika diperlukan
+              MaterialPageRoute(builder: (context) => AbsensiScreen()),
               (Route<dynamic> route) => false,
             );
           },
@@ -84,7 +72,7 @@ class _QRViewExampleState extends State<KameraScanScreen> {
             },
             child: Icon(Icons.flash_on),
           ),
-          SizedBox(width: 16), // Beri jarak antara ikon mengambang
+          SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () async {
               await controller?.flipCamera();
@@ -92,14 +80,14 @@ class _QRViewExampleState extends State<KameraScanScreen> {
             },
             child: Icon(Icons.flip_camera_android),
           ),
-          SizedBox(width: 16), // Beri jarak antara ikon mengambang
+          SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () async {
               await controller?.pauseCamera();
             },
             child: Icon(Icons.pause),
           ),
-          SizedBox(width: 16), // Beri jarak antara ikon mengambang
+          SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () async {
               await controller?.resumeCamera();
@@ -132,61 +120,6 @@ class _QRViewExampleState extends State<KameraScanScreen> {
     );
   }
 
-// // awal
-//   Widget _buildScanResultDialog(BuildContext context) {
-//     return AlertDialog(
-//       title: Text('Scan Result'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: <Widget>[
-//             Text(
-//               'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: Text('OK'),
-//         ),
-//       ],
-//     );
-//   }
-
-// // tambahan ============
-//   Widget _buildScanResultDialog(BuildContext context) {
-//     if (studentNama == null || studentKelas == null || studentNim == null) {
-//       return Center(child: CircularProgressIndicator());
-//     }
-//     return AlertDialog(
-//       title: Text('Scan Result'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: <Widget>[
-//             Text('Nama: $studentNama'),
-//             Text('Kelas: $studentKelas'),
-//             Text('NIM: $studentNim'),
-//             Text(
-//               'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: Text('OK'),
-//         ),
-//       ],
-//     );
-//   }
-
-// code baru lagi
   Widget _buildScanResultDialog(BuildContext context) {
     if (studentNama == null || studentKelas == null || studentNim == null) {
       return Center(child: CircularProgressIndicator());
@@ -207,26 +140,17 @@ class _QRViewExampleState extends State<KameraScanScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () async {
-            await _markAttendance();
-          },
-          child: Text('Hadir'),
+          child: Text('OK'),
         ),
       ],
     );
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 500 ||
             MediaQuery.of(context).size.height < 500)
         ? 250.0
         : 500.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -240,19 +164,6 @@ class _QRViewExampleState extends State<KameraScanScreen> {
     );
   }
 
-// // lama
-//   void _onQRViewCreated(QRViewController controller) {
-//     setState(() {
-//       this.controller = controller;
-//     });
-//     controller.scannedDataStream.listen((scanData) {
-//       setState(() {
-//         result = scanData;
-//       });
-//     });
-//   }
-
-// baru
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
@@ -261,21 +172,12 @@ class _QRViewExampleState extends State<KameraScanScreen> {
       setState(() {
         result = scanData;
       });
-      String? studentNim = scanData.code;
-      // Ensure the studentNim is not null and does not contain '//' before fetching data
-      if (studentNim != null && !studentNim.contains("//")) {
-        await _fetchStudentData(studentNim);
-      } else {
-        setState(() {
-          studentNama = 'Data tidak ditemukan';
-          studentKelas = 'Data tidak ditemukan';
-          this.studentNim = 'Data tidak ditemukan';
-        });
+      if (result != null) {
+        await _fetchStudentData(result!.code);
       }
     });
   }
 
-// tambahan
   Future<void> _fetchStudentData(String studentNim) async {
     try {
       var document = await FirebaseFirestore.instance
@@ -292,72 +194,16 @@ class _QRViewExampleState extends State<KameraScanScreen> {
       } else {
         setState(() {
           studentNama = 'Data tidak ditemukan';
-          studentKelas = 'Data tidak ditemukan';
-          this.studentNim = 'Data tidak ditemukan';
+          studentKelas = '';
+          this.studentNim = '';
         });
       }
     } catch (e) {
       setState(() {
         studentNama = 'Error: $e';
-        studentKelas = 'Error: $e';
-        this.studentNim = 'Error: $e';
+        studentKelas = '';
+        this.studentNim = '';
       });
-    }
-  }
-
-// baru
-  Future<void> _markAttendance() async {
-    try {
-      DateTime now = DateTime.now();
-      String docId = DateFormat('yyyy-MM-dd').format(now);
-      DocumentReference docRef =
-          FirebaseFirestore.instance.collection('Rekapan').doc(docId);
-
-      await docRef.get().then((docSnapshot) async {
-        if (docSnapshot.exists) {
-          var attendanceList = docSnapshot['attendance'] as List<dynamic>;
-          bool alreadyMarked = attendanceList
-              .any((attendance) => attendance['studentNim'] == studentNim);
-
-          if (alreadyMarked) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Siswa sudah hadir hari ini')),
-            );
-          } else {
-            await docRef.update({
-              'attendance': FieldValue.arrayUnion([
-                {
-                  'studentNama': studentNama,
-                  'studentNim': studentNim,
-                  'studentKelas': studentKelas,
-                  'dateTime': now.toIso8601String(),
-                }
-              ]),
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Kehadiran berhasil ditandai')),
-            );
-          }
-        } else {
-          await docRef.set({
-            'attendance': [
-              {
-                'studentNama': studentNama,
-                'studentNim': studentNim,
-                'studentKelas': studentKelas,
-                'dateTime': now.toIso8601String(),
-              }
-            ],
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Kehadiran berhasil ditandai')),
-          );
-        }
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
     }
   }
 

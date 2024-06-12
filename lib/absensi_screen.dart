@@ -6,6 +6,10 @@ import 'package:proj1/kelasA.dart';
 import 'package:proj1/kelasB.dart';
 import 'package:proj1/kelasC.dart';
 import 'package:proj1/kelasD.dart';
+import 'package:proj1/rekapanA.dart';
+import 'package:proj1/rekapanB.dart';
+import 'package:proj1/rekapanC.dart';
+import 'package:proj1/rekapanD.dart';
 import 'bottom_navigation_bar.dart';
 
 // import 'package:firebase_core/firebase_core.dart';
@@ -60,6 +64,38 @@ class AbsensiScreen extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => KelasDApp(),
+                ));
+              },
+            ),
+            ClassCard(
+              className: 'Rekapan A',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RekapanAApp(),
+                ));
+              },
+            ),
+            ClassCard(
+              className: 'Rekapan B',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RekapanBApp(),
+                ));
+              },
+            ),
+            ClassCard(
+              className: 'Rekapan C',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RekapanCApp(),
+                ));
+              },
+            ),
+            ClassCard(
+              className: 'Rekapan D',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RekapanDApp(),
                 ));
               },
             ),
