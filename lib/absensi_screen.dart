@@ -39,7 +39,7 @@ class AbsensiScreen extends StatelessWidget {
               className: 'A',
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => KelasAApp(),
+                  builder: (context) => RekapanAApp(),
                 ));
               },
             ),
@@ -47,7 +47,7 @@ class AbsensiScreen extends StatelessWidget {
               className: 'B',
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => KelasBApp(),
+                  builder: (context) => RekapanBApp(),
                 ));
               },
             ),
@@ -55,44 +55,12 @@ class AbsensiScreen extends StatelessWidget {
               className: 'C',
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => KelasCApp(),
-                ));
-              },
-            ),
-            ClassCard(
-              className: 'D',
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => KelasDApp(),
-                ));
-              },
-            ),
-            ClassCard(
-              className: 'Rekapan A',
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RekapanAApp(),
-                ));
-              },
-            ),
-            ClassCard(
-              className: 'Rekapan B',
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => RekapanBApp(),
-                ));
-              },
-            ),
-            ClassCard(
-              className: 'Rekapan C',
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => RekapanCApp(),
                 ));
               },
             ),
             ClassCard(
-              className: 'Rekapan D',
+              className: 'D',
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => RekapanDApp(),

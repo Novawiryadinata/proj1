@@ -3,6 +3,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:proj1/absensi_screen.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Attendance App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: RekapanDApp(),
+    );
+  }
+}
+
 class RekapanDApp extends StatefulWidget {
   @override
   _RekapanDAppState createState() => _RekapanDAppState();
@@ -11,8 +30,6 @@ class RekapanDApp extends StatefulWidget {
 class _RekapanDAppState extends State<RekapanDApp> {
   bool _initialized = false;
   bool _error = false;
-
-  // final String kelasFilter = 'D'; // The class to filter by
 
   @override
   void initState() {
@@ -37,31 +54,37 @@ class _RekapanDAppState extends State<RekapanDApp> {
   @override
   Widget build(BuildContext context) {
     if (_error) {
-      return MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Text('Failed to initialize Firebase'),
-          ),
+      return Scaffold(
+        body: Center(
+          child: Text('Failed to initialize Firebase'),
         ),
       );
     }
 
     if (!_initialized) {
-      return MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
       );
     }
 
-    return MaterialApp(
-      title: 'Student List Kelas D',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Attendance List for Kelas D'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => AbsensiScreen(),
+              ),
+              (Route<dynamic> route) => false,
+            );
+          },
+        ),
       ),
-      home: StudentListScreen(),
+      body: StudentListScreen(),
     );
   }
 }
@@ -71,88 +94,75 @@ class StudentListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Attendance List for Kelas $kelasFilter'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate to the main or login page
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AbsensiScreen()), // Change to the main page if needed
-              (Route<dynamic> route) => false,
-            );
-          },
-        ),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('Rekapan').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No attendance data found'));
-          }
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Rekapan').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Center(child: Text('No attendance data found'));
+        }
 
-          final List<DocumentSnapshot> documents = snapshot.data!.docs;
+        final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
-          // Initialize the list to hold grouped data
-          List<Map<String, dynamic>> groupedData = [];
+        // Initialize the map to hold grouped data
+        Map<String, List<Map<String, dynamic>>> groupedByDate = {};
 
-          // Group data by document ID
-          for (var document in documents) {
-            var documentData = document.data() as Map<String, dynamic>;
-            groupedData.add({'id': document.id, 'data': documentData});
-          }
+        // Group data by date
+        documents.forEach((document) {
+          var documentData = document.data() as Map<String, dynamic>;
+          var attendanceList = documentData['attendance'] as List<dynamic>;
 
-          // Filter data based on kelas
-          List<Map<String, dynamic>> filteredData = [];
-          for (var group in groupedData) {
-            var attendanceList = group['data']['attendance'] as List<dynamic>;
-            for (var attendance in attendanceList) {
-              if (attendance['studentKelas'] == kelasFilter) {
-                filteredData.add({
-                  'id': group['id'],
-                  'attendance': attendance,
-                });
+          attendanceList.forEach((attendance) {
+            if (attendance['studentKelas'] == kelasFilter) {
+              String dateKey = document.id;
+              if (!groupedByDate.containsKey(dateKey)) {
+                groupedByDate[dateKey] = [];
               }
+              groupedByDate[dateKey]!.add(attendance);
             }
-          }
+          });
+        });
 
-          if (filteredData.isEmpty) {
-            return Center(
-              child: Text('Kehadiran Kelas $kelasFilter'),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: filteredData.length,
-            itemBuilder: (context, index) {
-              final attendanceData = filteredData[index];
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text('Tanggal: ${attendanceData['id']}'),
-                  ),
-                  ListTile(
-                    title: Text(attendanceData['attendance']['studentNama']),
-                    subtitle: Text(
-                      'NIM: ${attendanceData['attendance']['studentNim']} - Kelas: ${attendanceData['attendance']['studentKelas']} - Date: ${attendanceData['id']} - Time: ${attendanceData['attendance']['dateTime']}',
-                    ),
-                  ),
-                  Divider(), // Add a divider after each group
-                ],
-              );
-            },
+        if (groupedByDate.isEmpty) {
+          return Center(
+            child: Text('No attendance for Kelas D'),
           );
-        },
-      ),
+        }
+
+        // Build the list view
+        return ListView(
+          children: groupedByDate.entries.map((entry) {
+            String date = entry.key;
+            List<Map<String, dynamic>> attendances = entry.value;
+            int totalAttendance = attendances.length;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  title:
+                      Text('Tanggal: $date - Jumlah Siswa: $totalAttendance'),
+                ),
+                Column(
+                  children: attendances.map((attendance) {
+                    return ListTile(
+                      title: Text(attendance['studentNama']),
+                      subtitle: Text(
+                        'NIM: ${attendance['studentNim']} - Kelas: ${attendance['studentKelas']} - Time: ${attendance['dateTime']}',
+                      ),
+                    );
+                  }).toList(),
+                ),
+                Divider(),
+              ],
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }

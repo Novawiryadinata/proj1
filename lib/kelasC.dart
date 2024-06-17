@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:proj1/absensi_screen.dart';
+import 'package:proj1/crud_students.dart';
 
 class KelasCApp extends StatefulWidget {
   @override
@@ -81,7 +82,7 @@ class StudentListScreen extends StatelessWidget {
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) =>
-                      AbsensiScreen()), // Change to the main page if needed
+                      CrudStudents()), // Change to the main page if needed
               (Route<dynamic> route) => false,
             );
           },

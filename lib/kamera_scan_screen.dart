@@ -132,93 +132,6 @@ class _QRViewExampleState extends State<KameraScanScreen> {
     );
   }
 
-// // awal
-//   Widget _buildScanResultDialog(BuildContext context) {
-//     return AlertDialog(
-//       title: Text('Scan Result'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: <Widget>[
-//             Text(
-//               'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: Text('OK'),
-//         ),
-//       ],
-//     );
-//   }
-
-// // tambahan ============
-//   Widget _buildScanResultDialog(BuildContext context) {
-//     if (studentNama == null || studentKelas == null || studentNim == null) {
-//       return Center(child: CircularProgressIndicator());
-//     }
-//     return AlertDialog(
-//       title: Text('Scan Result'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: <Widget>[
-//             Text('Nama: $studentNama'),
-//             Text('Kelas: $studentKelas'),
-//             Text('NIM: $studentNim'),
-//             Text(
-//               'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
-//             ),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: Text('OK'),
-//         ),
-//       ],
-//     );
-//   }
-
-// // code baru lagi
-//   Widget _buildScanResultDialog(BuildContext context) {
-//     if (studentNama == null || studentKelas == null || studentNim == null) {
-//       return Center(child: CircularProgressIndicator());
-//     }
-//     return AlertDialog(
-//       title: Text('Scan Result'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: <Widget>[
-//             Text('Nama: $studentNama'),
-//             Text('Kelas: $studentKelas'),
-//             Text('NIM: $studentNim'),
-//           ],
-//         ),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           child: Text('Cancel'),
-//         ),
-//         TextButton(
-//           onPressed: () async {
-//             await _markAttendance();
-//           },
-//           child: Text('Hadir'),
-//         ),
-//       ],
-//     );
-//   }
-
   Widget _buildScanResultDialog(BuildContext context) {
     if (studentNama == null || studentKelas == null || studentNim == null) {
       return Center(child: CircularProgressIndicator());
@@ -276,18 +189,6 @@ class _QRViewExampleState extends State<KameraScanScreen> {
   }
 
 // // lama
-//   void _onQRViewCreated(QRViewController controller) {
-//     setState(() {
-//       this.controller = controller;
-//     });
-//     controller.scannedDataStream.listen((scanData) {
-//       setState(() {
-//         result = scanData;
-//       });
-//     });
-//   }
-
-// baru
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
